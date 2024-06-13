@@ -13,13 +13,10 @@ contract Twitter {
 
     mapping(address => Tweet[]) public tweets;
 
-    // Event for a new tweet
-    event NewTweet(address indexed author, uint256 index);
-
     // Function to create a new tweet
     function createTweet(string memory tweet) public {
         // Ensure the tweet is not too long
-        require(bytes(tweet).length <= Max_tweet, "Tweet is too long Bro!");
+        require(bytes(tweet).length <= Max_tweet, "Tweet is too long!");
 
         Tweet memory newTweet = Tweet({
             author: msg.sender,
@@ -29,16 +26,13 @@ contract Twitter {
         });
 
         tweets[msg.sender].push(newTweet);
-
-        // Emit an event for the new tweet
-        emit NewTweet(msg.sender, tweets[msg.sender].length - 1);
     }
 
     // Function to get a specific tweet
-    function getTweet(uint256 i) public view returns (Tweet memory) {
+    function getTweet(uint256 index) public view returns (Tweet memory) {
         // Ensure the tweet index is within bounds
-        require(i < tweets[msg.sender].length, "Invalid tweet index.");
-        return tweets[msg.sender][i];
+        require(index < tweets[msg.sender].length, "Invalid tweet index.");
+        return tweets[msg.sender][index];
     }
 
     // Function to get all tweets by a specific user
@@ -50,7 +44,7 @@ contract Twitter {
     function likeTweet(address author, uint256 index) public {
         // Ensure the tweet index is within bounds
         require(index < tweets[author].length, "Invalid tweet index.");
-        
+
         Tweet storage tweetToLike = tweets[author][index];
 
         // Ensure the tweet to like exists
@@ -64,10 +58,10 @@ contract Twitter {
         // Ensure the tweet index is within bounds
         require(index < tweets[msg.sender].length, "Invalid tweet index.");
 
-        // Delete the tweet and shift elements
-        for (uint256 i = index; i < tweets[msg.sender].length - 1; i++) {
-            tweets[msg.sender][i] = tweets[msg.sender][i + 1];
-        }
+        // Move the last tweet to the place of the tweet to delete
+        tweets[msg.sender][index] = tweets[msg.sender][tweets[msg.sender].length - 1];
+
+        // Remove the last tweet
         tweets[msg.sender].pop();
 
         // Ensure the tweet was deleted
