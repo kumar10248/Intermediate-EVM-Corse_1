@@ -1,6 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.18;
 
+//Error Handling in solidity
+//1. Reequire function
+//2. revert function
+//3. assert function
+
+
 contract Twitter {
     uint16 constant Max_tweet = 280;
 
