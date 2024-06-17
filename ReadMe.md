@@ -12,12 +12,12 @@ The `ErrorHandling` contract contains the following features:
 
 ## Functions
 
-### `setValue(uint256 _value)`
+### `setValue(uint256 val)`
 
 Sets the value of the `value` state variable.
 
 - **Parameters:** 
-  - `_value` (uint256): The new value to be set. Must be greater than zero.
+  - `val` (uint256): The new value to be set. Must be greater than zero.
 - **Events:**
   - Emits `ValueChanged(uint256 newValue)` upon successfully setting the value.
 - **Error Handling:**
@@ -69,11 +69,11 @@ pragma solidity ^0.8.0;
 contract ErrorHandling {
     uint256 public value;
 
-    event ValueChanged(uint256 newValue);
+    event ValueChanged(uint256 new_Val);
 
-    function setValue(uint256 _value) public {
-        require(_value > 0, "Value must be greater than zero");
-        value = _value;
+    function setValue(uint256 val) public {
+        require(val > 0, "Value must be greater than zero");
+        value = val;
         emit ValueChanged(value);
     }
 
