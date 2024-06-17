@@ -5,14 +5,14 @@ contract ErrorHandling {
     uint256 public value;
 
   
-    event ValueChanged(uint256 newValue);
+    event ValueChanged(uint256 new_Val);
 
   // Function to implement the require
-    function setValue(uint256 _value) public {
-        require(_value > 0, "Value must be greater than zero");
+    function setValue(uint256 val) public {
+        require(val > 0, "Value must be greater than zero");
 
        
-        value = _value;
+        value = val;
 
         emit ValueChanged(value);
     }
