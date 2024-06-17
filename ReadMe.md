@@ -1,52 +1,96 @@
 # ErrorHandling Smart Contract
 
-This project is a simple smart contract implemented on the Ethereum Virtual Machine (EVM) for handling errors.
+This Solidity smart contract demonstrates basic error handling using `require`, `revert`, and `assert` statements. It includes functions to set, get, reset, and assert the value of a stored variable.
 
-## Features
+## Overview
 
-- Setting a value
-- Getting the current value
-- Resetting the value to zero
-- Asserting that the current value is non-negative
+The `ErrorHandling` contract contains the following features:
+- Setting a value with a requirement that the value must be greater than zero.
+- Retrieving the stored value.
+- Resetting the value to zero, with a check to ensure it is not already zero.
+- Asserting that the stored value is always non-negative.
 
-## Prerequisites
+## Functions
 
-- Solidity ^0.8.0
-- Truffle ^5.4.0
-- Ganache ^2.5.4
+### `setValue(uint256 _value)`
 
-## Installation
+Sets the value of the `value` state variable.
 
-1. Clone the repository
-2. Install dependencies with `npm install`
-3. Start Ganache
-4. Compile the contract with `truffle compile`
-5. Deploy the contract with `truffle migrate`
+- **Parameters:** 
+  - `_value` (uint256): The new value to be set. Must be greater than zero.
+- **Events:**
+  - Emits `ValueChanged(uint256 newValue)` upon successfully setting the value.
+- **Error Handling:**
+  - Uses `require` to ensure the new value is greater than zero.
 
-## Usage
+### `getValue()`
 
-After deploying the contract, you can interact with it using the Truffle console.
+Returns the current value of the `value` state variable.
 
-### Setting a Value
+- **Returns:**
+  - `value` (uint256): The current value.
 
-To set a value, call the `setValue` function with your desired value as a parameter. The value must be greater than zero.
+### `reset()`
 
-### Getting the Current Value
+Resets the value of the `value` state variable to zero.
 
-To get the current value, call the `getValue` function.
+- **Events:**
+  - Emits `ValueChanged(uint256 newValue)` upon successfully resetting the value.
+- **Error Handling:**
+  - Uses `revert` to prevent resetting the value if it is already zero.
 
-### Resetting the Value to Zero
+### `assertFunc()`
 
-To reset the value to zero, call the `resetFunc` function. This function will revert if the current value is already zero.
+Asserts that the current value of the `value` state variable is non-negative.
 
-### Asserting that the Current Value is Non-negative
+- **Error Handling:**
+  - Uses `assert` to ensure the value is greater than or equal to zero. This should always be true given the logic of the contract.
 
-To assert that the current value is non-negative, call the `assertFunc` function. This function should always pass for uint256.
+## Events
 
-## Contributing
+### `ValueChanged(uint256 newValue)`
 
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+Emitted when the `value` state variable is changed.
 
 ## License
 
-[MIT](https://choosealicense.com/licenses/mit/)
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Deployment
+
+To deploy this contract, use the following configuration:
+
+- **Solidity Version:** 0.8.0 or above
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract ErrorHandling {
+    uint256 public value;
+
+    event ValueChanged(uint256 newValue);
+
+    function setValue(uint256 _value) public {
+        require(_value > 0, "Value must be greater than zero");
+        value = _value;
+        emit ValueChanged(value);
+    }
+
+    function getValue() public view returns (uint256) {
+        return value;
+    }
+
+    function reset() public {
+        if (value == 0) {
+            revert("Value is already zero");
+        }
+        value = 0;
+        emit ValueChanged(value);
+    }
+
+    function assertFunc() public view {
+        uint256 currentValue = value;
+        assert(currentValue >= 0);
+    }
+}
