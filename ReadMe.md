@@ -1,12 +1,13 @@
-# EVM Twitter Clone
+# ErrorHandling Smart Contract
 
-This project is a simple Twitter clone implemented on the Ethereum Virtual Machine (EVM).
+This project is a simple smart contract implemented on the Ethereum Virtual Machine (EVM) for handling errors.
 
 ## Features
 
-- Tweeting
-- Liking tweets
-- Deleting tweets
+- Setting a value
+- Getting the current value
+- Resetting the value to zero
+- Asserting that the current value is non-negative
 
 ## Prerequisites
 
@@ -26,17 +27,21 @@ This project is a simple Twitter clone implemented on the Ethereum Virtual Machi
 
 After deploying the contract, you can interact with it using the Truffle console.
 
-### Tweeting
+### Setting a Value
 
-To tweet, call the `tweet` function with your message as a parameter.
+To set a value, call the `setValue` function with your desired value as a parameter. The value must be greater than zero.
 
-### Liking a Tweet
+### Getting the Current Value
 
-To like a tweet, call the `likeTweet` function with the index of the tweet you want to like.
+To get the current value, call the `getValue` function.
 
-### Deleting a Tweet
+### Resetting the Value to Zero
 
-To delete a tweet, call the `deleteTweet` function with the index of the tweet you want to delete.
+To reset the value to zero, call the `resetFunc` function. This function will revert if the current value is already zero.
+
+### Asserting that the Current Value is Non-negative
+
+To assert that the current value is non-negative, call the `assertFunc` function. This function should always pass for uint256.
 
 ## Contributing
 
