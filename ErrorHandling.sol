@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-contract ErrorHandling {
+contract SimpleGradingSystem {
     address public teacher;
-    mapping(address => string) private grades;
+    mapping(address => string) public  grades;
 
-    modifier onlyTeacher() {
+    modifier Teacher() {
         require(msg.sender == teacher, "Only the teacher can Give the grade to the Student.");
         _;
     }
@@ -16,21 +16,23 @@ contract ErrorHandling {
     }
 
     // Function to assign a grade based on marks
-    function assignGrade(address student, uint marks) public onlyTeacher {
+    function assignGrade(address student, uint marks) public Teacher {
       
         require(marks >= 0 && marks <= 100, "Marks must be between 0 and 100.");
 
         // Determine the grade based on the marks
         string memory grade;
-        if (marks >= 90) {
+        if (marks >= 95) {
             grade = "A+";
-        } else if (marks >= 80) {
+        } else if (marks >= 90) {
             grade = "A";
-        } else if (marks >= 70) {
+        } else if (marks >= 80) {
             grade = "B+";
-        } else if (marks >= 60) {
+        } else if (marks >= 70) {
             grade = "B";
-        } else if (marks >= 50) {
+        } else if (marks >= 60) {
+            grade = "C+";
+             } else if (marks >= 50) {
             grade = "C";
         } else if (marks >= 40) {
             grade = "D";
@@ -52,7 +54,7 @@ contract ErrorHandling {
     }
 
     // Function to change the teacher
-    function changeTeacher(address newTeacher) public onlyTeacher {
+    function changeTeacher(address newTeacher) public Teacher {
         // Ensure the new teacher address is not zero
         require(newTeacher != address(0), "New teacher's address must be valid.");
 
@@ -60,7 +62,7 @@ contract ErrorHandling {
     }
 
     // Function to remove a student's grade
-    function removeGrade(address student) public onlyTeacher {
+    function removeGrade(address student) public Teacher {
         // Ensure the student has a grade assigned
         string memory grade = grades[student];
         if (bytes(grade).length == 0) {
