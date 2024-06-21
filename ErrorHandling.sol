@@ -3,34 +3,51 @@ pragma solidity ^0.8.0;
 
 contract ErrorHandling {
     address public teacher;
-    mapping (address => uint) private grades;
+    mapping(address => string) private grades;
 
-    // Modifier to restrict access to the teacher only
     modifier onlyTeacher() {
-        require(msg.sender == teacher, "Only the teacher can perform this action.");
+        require(msg.sender == teacher, "Only the teacher can Give the grade to the Student.");
         _;
     }
 
-    // Constructor to set the teacher's address
+
     constructor() {
         teacher = msg.sender;
     }
 
-    // Function to assign a grade to a student
-    function assignGrade(address student, uint grade) public onlyTeacher {
-        // Ensure the grade is between 0 and 100
-        require(grade >= 0 && grade <= 100, "Grade must be between 0 and 100.");
+    // Function to assign a grade based on marks
+    function assignGrade(address student, uint marks) public onlyTeacher {
+      
+        require(marks >= 0 && marks <= 100, "Marks must be between 0 and 100.");
+
+        // Determine the grade based on the marks
+        string memory grade;
+        if (marks >= 90) {
+            grade = "A+";
+        } else if (marks >= 80) {
+            grade = "A";
+        } else if (marks >= 70) {
+            grade = "B+";
+        } else if (marks >= 60) {
+            grade = "B";
+        } else if (marks >= 50) {
+            grade = "C";
+        } else if (marks >= 40) {
+            grade = "D";
+        } else {
+            grade = "F";
+        }
 
         grades[student] = grade;
     }
 
     // Function to get the grade of a student
-    function getGrade(address student) public view returns (uint) {
-        uint grade = grades[student];
+    function getGrade(address student) public view returns (string memory) {
+        string memory grade = grades[student];
 
-        // Ensure the grade is valid (this is more of an example, as the grade range is already checked)
-        assert(grade <= 100);
-
+        // Ensure the grade is not empty
+        require(bytes(grade).length > 0, "Student does not have a grade assigned.");
+        
         return grade;
     }
 
@@ -45,7 +62,8 @@ contract ErrorHandling {
     // Function to remove a student's grade
     function removeGrade(address student) public onlyTeacher {
         // Ensure the student has a grade assigned
-        if (grades[student] == 0) {
+        string memory grade = grades[student];
+        if (bytes(grade).length == 0) {
             revert("Student does not have a grade assigned.");
         }
 
