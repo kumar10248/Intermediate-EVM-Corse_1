@@ -1,96 +1,66 @@
 # ErrorHandling Smart Contract
 
-This Solidity smart contract demonstrates basic error handling using `require`, `revert`, and `assert` statements. It includes functions to set, get, reset, and assert the value of a stored variable.
+This Solidity smart contract demonstrates basic error handling mechanisms such as `require`, `revert`, and `assert` within the Ethereum Virtual Machine (EVM). It is designed to manage grades for students, allowing only the teacher to assign, change, or remove grades.
 
 ## Overview
 
-The `ErrorHandling` contract contains the following features:
-- Setting a value with a requirement that the value must be greater than zero.
-- Retrieving the stored value.
-- Resetting the value to zero, with a check to ensure it is not already zero.
-- Asserting that the stored value is always non-negative.
+The `ErrorHandling` contract includes functionalities to assign grades to students based on their marks, retrieve grades, change the teacher, and remove a student's grade. It utilizes Solidity's error handling statements to ensure that only valid operations are performed.
+
+## Features
+
+- **Assign Grades:** Assigns grades to students based on their marks.
+- **Retrieve Grades:** Retrieves the grade of a specific student.
+- **Change Teacher:** Allows changing the teacher to a new address.
+- **Remove Grade:** Removes a student's grade.
 
 ## Functions
 
-### `setValue(uint256 val)`
+### `assignGrade(address student, uint marks)`
 
-Sets the value of the `value` state variable.
+Assigns a grade to a student based on the marks provided.
 
-- **Parameters:** 
-  - `val` (uint256): The new value to be set. Must be greater than zero.
-- **Events:**
-  - Emits `ValueChanged(uint256 newValue)` upon successfully setting the value.
+- **Parameters:**
+  - `student` (address): The address of the student.
+  - `marks` (uint): The marks obtained by the student.
 - **Error Handling:**
-  - Uses `require` to ensure the new value is greater than zero.
+  - Uses `require` to ensure the marks are within the range of 0 to 100.
+  - Only the teacher can assign grades.
 
-### `getValue()`
+### `getGrade(address student)`
 
-Returns the current value of the `value` state variable.
+Retrieves the grade of a specific student.
 
+- **Parameters:**
+  - `student` (address): The address of the student.
 - **Returns:**
-  - `value` (uint256): The current value.
-
-### `reset()`
-
-Resets the value of the `value` state variable to zero.
-
-- **Events:**
-  - Emits `ValueChanged(uint256 newValue)` upon successfully resetting the value.
+  - `grade` (string): The grade of the student.
 - **Error Handling:**
-  - Uses `revert` to prevent resetting the value if it is already zero.
+  - Uses `require` to ensure the student has a grade assigned.
 
-### `assertFunc()`
+### `otherTeacher(address newTeacher)`
 
-Asserts that the current value of the `value` state variable is non-negative.
+Changes the teacher to a new address.
 
+- **Parameters:**
+  - `newTeacher` (address): The address of the new teacher.
 - **Error Handling:**
-  - Uses `assert` to ensure the value is greater than or equal to zero. This should always be true given the logic of the contract.
+  - Uses `require` to ensure the new teacher's address is valid.
+  - Only the current teacher can change the teacher.
 
-## Events
+### `removeGrade(address student)`
 
-### `ValueChanged(uint256 newValue)`
+Removes the grade of a specific student.
 
-Emitted when the `value` state variable is changed.
+- **Parameters:**
+  - `student` (address): The address of the student.
+- **Error Handling:**
+  - Uses `revert` if the student does not have a grade assigned.
+  - Only the teacher can remove grades.
+
+## Deployment
+
+To deploy this contract, ensure you have Truffle and Ganache installed and set up. Compile the contract using `truffle compile` and deploy it to your local Ethereum blockchain using `truffle migrate`.
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Deployment
-
-To deploy this contract, use the following configuration:
-
-- **Solidity Version:** 0.8.0 or above
-
-```solidity
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
-
-contract ErrorHandling {
-    uint256 public value;
-
-    event ValueChanged(uint256 new_Val);
-
-    function setValue(uint256 val) public {
-        require(val > 0, "Value must be greater than zero");
-        value = val;
-        emit ValueChanged(value);
-    }
-
-    function getValue() public view returns (uint256) {
-        return value;
-    }
-
-    function reset() public {
-        if (value == 0) {
-            revert("Value is already zero");
-        }
-        value = 0;
-        emit ValueChanged(value);
-    }
-
-    function assertFunc() public view {
-        uint256 currentValue = value;
-        assert(currentValue >= 0);
-    }
-}
